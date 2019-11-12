@@ -15,23 +15,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.terawarehouse.gateway.controller.client.catalog;
+package com.terawarehouse.gateway.controller.client;
+
+import java.util.UUID;
+
+import javax.transaction.NotSupportedException;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.terawarehouse.business.domain.catalog.CategoryDto;
+import com.terawarehouse.business.domain.catalog.ProductDto;
 
 /**
  * @author Edward P. Legaspi | czetsuya@gmail.com
  */
-@FeignClient(value = "catalog", path = "/catalog/categories")
-public interface CategoryServiceProxy {
+@FeignClient(value = "catalog")
+public interface CatalogServiceProxy {
 
-    @GetMapping(path = "/")
+    @GetMapping(path = "/catalog/categories")
     CollectionModel<EntityModel<CategoryDto>> findAllCategories(@RequestParam(required = false) Integer size, @RequestParam(required = false) Integer page);
+
+    @GetMapping(path = "/catalog/products/{uid}")
+    public EntityModel<ProductDto> findById(@PathVariable UUID uid) throws NotSupportedException;
 
 }

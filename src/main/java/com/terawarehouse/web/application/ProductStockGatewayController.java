@@ -23,6 +23,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.transaction.NotSupportedException;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -36,8 +38,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.terawarehouse.business.domain.catalog.ProductDto;
 import com.terawarehouse.business.domain.inventory.ProductStockDto;
-import com.terawarehouse.gateway.controller.client.catalog.ProductServiceProxy;
-import com.terawarehouse.gateway.controller.client.inventory.ProductStockQueryServiceProxy;
+import com.terawarehouse.gateway.controller.client.CatalogServiceProxy;
+import com.terawarehouse.gateway.controller.client.InventoryServiceProxy;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Edward P. Legaspi | czetsuya@gmail.com
@@ -47,29 +51,26 @@ import com.terawarehouse.gateway.controller.client.inventory.ProductStockQuerySe
  */
 @RestController
 @RequestMapping(path = "/stocks", produces = MediaType.APPLICATION_JSON_VALUE)
+@Slf4j
 public class ProductStockGatewayController {
 
     @Autowired
-    private ProductServiceProxy productServiceProxy;
+    private CatalogServiceProxy catalogServiceProxy;
 
     @Autowired
-    private ProductStockQueryServiceProxy productStockQueryService;
+    private InventoryServiceProxy inventoryServiceProxy;
 
     @GetMapping(path = "/{productId}")
-    public List<EntityModel<ProductStockDto>> findProductStocks(@PathVariable UUID productId, @RequestParam(required = false) Integer size,
-            @RequestParam(required = false) Integer page) {
+    public List<EntityModel<ProductStockDto>> findProductStocks(@PathVariable @NotNull @Valid UUID productId, @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) Integer page) throws NotSupportedException {
 
-        CollectionModel<EntityModel<ProductStockDto>> productStocks = productStockQueryService.findAll(size, page);
+        ProductDto productDto = catalogServiceProxy.findById(productId).getContent();
+        log.debug("product={}", productDto);
+
+        CollectionModel<EntityModel<ProductStockDto>> productStocks = inventoryServiceProxy.findAll(size, page);
         return productStocks.getContent().stream().map(e -> {
             ProductStockDto productStockDto = e.getContent();
-            try {
-                ProductDto productDto = productServiceProxy.findById(productStockDto.getProductId()).getContent();
-                productStockDto.setProductCode(productDto.getCode());
-
-            } catch (NotSupportedException e1) {
-                return null;
-            }
-
+            productStockDto.setProductCode(productDto.getCode());
             return e;
         }).filter(Objects::nonNull).collect(Collectors.toList());
     }
