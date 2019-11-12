@@ -17,17 +17,51 @@
  */
 package com.terawarehouse.gateway.controller.client;
 
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import java.io.Serializable;
+import java.util.UUID;
 
-import freemarker.ext.beans.CollectionModel;
+import javax.transaction.NotSupportedException;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.terawarehouse.business.domain.catalog.CategoryDto;
 
 /**
  * @author Edward P. Legaspi | czetsuya@gmail.com
  */
-@FeignClient(value = "catalog")
+@FeignClient(value = "catalog", path = "/catalog/categories")
 public interface CatalogControllerProxy {
 
-    @GetMapping(path = "/api/v1/catalog/categories")
-    CollectionModel findCategory(Integer size, Integer page);
+    @GetMapping(path = "/test/hello")
+    public String test();
+
+    @PostMapping(path = "/{pcid}")
+    ResponseEntity<CategoryDto> createCategory(@PathVariable @NotNull UUID pcid, @RequestBody @Valid CategoryDto dto) throws NotSupportedException;
+
+    @PutMapping(path = "/{uid}")
+    ResponseEntity<CategoryDto> update(@RequestBody CategoryDto newDto, @PathVariable @NotNull Serializable uid) throws NotSupportedException;
+
+    @PostMapping(path = "/{uid}/createOrUpdate")
+    ResponseEntity<?> createOrUpdate(@RequestBody @Valid CategoryDto newDto, @NotNull @PathVariable("uuid") Serializable uid) throws NotSupportedException;
+
+    @GetMapping(path = "/{uid}")
+    EntityModel<CategoryDto> findById(@PathVariable UUID uid) throws NotSupportedException;
+
+    @GetMapping(path = "/")
+    CollectionModel<EntityModel<CategoryDto>> findAllCategories(Integer size, Integer page);
+
+    @DeleteMapping(path = "/{uid}")
+    public ResponseEntity<CategoryDto> delete(@PathVariable @NotNull Serializable uid) throws NotSupportedException;
+
 }
