@@ -33,6 +33,7 @@ import com.terawarehouse.business.domain.catalog.ProductDto;
 
 /**
  * @author Edward P. Legaspi | czetsuya@gmail.com
+ * @version 0.0.1
  */
 @FeignClient(value = "catalog")
 public interface CatalogServiceProxy {
@@ -41,6 +42,6 @@ public interface CatalogServiceProxy {
     CollectionModel<EntityModel<CategoryDto>> findAllCategories(@RequestParam(required = false) Integer size, @RequestParam(required = false) Integer page);
 
     @GetMapping(path = "/catalog/products/{uid}")
-    public EntityModel<ProductDto> findById(@PathVariable UUID uid) throws NotSupportedException;
+    EntityModel<ProductDto> findById(@PathVariable UUID uid) throws NotSupportedException;
 
 }

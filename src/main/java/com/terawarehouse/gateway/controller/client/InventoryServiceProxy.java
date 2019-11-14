@@ -28,8 +28,8 @@ import com.terawarehouse.business.domain.inventory.ProductStockDto;
 /**
  * @author Edward P. Legaspi | czetsuya@gmail.com
  * 
- * @since
- * @version
+ * @since 0.0.1
+ * @version 0.0.1
  */
 @FeignClient(value = "inventory")
 public interface InventoryServiceProxy {
