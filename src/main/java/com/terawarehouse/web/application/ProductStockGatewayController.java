@@ -23,13 +23,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.transaction.NotSupportedException;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(path = "/stocks", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
+@Validated
 public class ProductStockGatewayController {
 
     @Autowired
@@ -61,13 +62,13 @@ public class ProductStockGatewayController {
     private InventoryServiceProxy inventoryServiceProxy;
 
     @GetMapping(path = "/{productId}")
-    public List<EntityModel<ProductStockDto>> findProductStocks(@PathVariable @NotNull @Valid UUID productId, @RequestParam(required = false) Integer size,
+    public List<EntityModel<ProductStockDto>> findProductStocks(@PathVariable @NotNull UUID productId, @RequestParam(required = false) Integer size,
             @RequestParam(required = false) Integer page) throws NotSupportedException {
 
-        ProductDto productDto = catalogServiceProxy.findById(productId).getContent();
+        ProductDto productDto = catalogServiceProxy.findByProductId(productId).getContent();
         log.debug("product={}", productDto);
 
-        CollectionModel<EntityModel<ProductStockDto>> productStocks = inventoryServiceProxy.findAll(size, page);
+        CollectionModel<EntityModel<ProductStockDto>> productStocks = inventoryServiceProxy.findByProductId(productId, size, page);
         return productStocks.getContent().stream().map(e -> {
             ProductStockDto productStockDto = e.getContent();
             productStockDto.setProductCode(productDto.getCode());

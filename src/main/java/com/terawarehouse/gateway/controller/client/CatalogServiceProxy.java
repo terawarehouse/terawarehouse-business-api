@@ -20,6 +20,7 @@ package com.terawarehouse.gateway.controller.client;
 import java.util.UUID;
 
 import javax.transaction.NotSupportedException;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.hateoas.CollectionModel;
@@ -42,6 +43,6 @@ public interface CatalogServiceProxy {
     CollectionModel<EntityModel<CategoryDto>> findAllCategories(@RequestParam(required = false) Integer size, @RequestParam(required = false) Integer page);
 
     @GetMapping(path = "/catalog/products/{uid}")
-    EntityModel<ProductDto> findById(@PathVariable UUID uid) throws NotSupportedException;
+    EntityModel<ProductDto> findByProductId(@PathVariable @NotNull UUID uid) throws NotSupportedException;
 
 }

@@ -17,10 +17,15 @@
  */
 package com.terawarehouse.gateway.controller.client;
 
+import java.util.UUID;
+
+import javax.validation.constraints.NotNull;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.terawarehouse.business.domain.inventory.ProductStockDto;
@@ -36,5 +41,9 @@ public interface InventoryServiceProxy {
 
     @GetMapping(path = "/stocks")
     CollectionModel<EntityModel<ProductStockDto>> findAll(@RequestParam(required = false) Integer size, @RequestParam(required = false) Integer page);
+
+    @GetMapping(path = "/stocks/{productId}")
+    CollectionModel<EntityModel<ProductStockDto>> findByProductId(@PathVariable @NotNull UUID productId, @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) Integer page);
 
 }
