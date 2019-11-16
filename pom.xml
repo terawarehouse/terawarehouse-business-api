@@ -10,7 +10,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.terawarehouse</groupId>
-	<artifactId>terawarehouse-gateway</artifactId>
+	<artifactId>terawarehouse-business-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Terawarehouse Gateway</name>
 	<description>Terawarehouse Gateway</description>
