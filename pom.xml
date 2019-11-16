@@ -12,8 +12,8 @@
 	<groupId>com.terawarehouse</groupId>
 	<artifactId>terawarehouse-business-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Terawarehouse Gateway</name>
-	<description>Terawarehouse Gateway</description>
+	<name>Terawarehouse Business API</name>
+	<description>Terawarehouse Business API</description>
 
 	<properties>
 		<java.version>11</java.version>
