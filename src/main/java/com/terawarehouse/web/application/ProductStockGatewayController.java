@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.terawarehouse.business.domain.catalog.CategoryDto;
 import com.terawarehouse.business.domain.catalog.ProductDto;
 import com.terawarehouse.business.domain.inventory.ProductStockDto;
 import com.terawarehouse.gateway.controller.client.CatalogServiceProxy;
@@ -74,6 +75,11 @@ public class ProductStockGatewayController {
             productStockDto.setProductCode(productDto.getCode());
             return e;
         }).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    @GetMapping(path = "/productCategories")
+    public CollectionModel<EntityModel<CategoryDto>> findAllCategories(@RequestParam(required = false) Integer size, @RequestParam(required = false) Integer page) {
+        return catalogServiceProxy.findAllCategories(size, page);
     }
 
 }

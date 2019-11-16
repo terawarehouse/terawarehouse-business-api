@@ -17,32 +17,36 @@
  */
 package com.terawarehouse.gateway.controller.client;
 
+import java.util.Collections;
 import java.util.UUID;
 
 import javax.transaction.NotSupportedException;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.stereotype.Service;
 
 import com.terawarehouse.business.domain.catalog.CategoryDto;
 import com.terawarehouse.business.domain.catalog.ProductDto;
 
 /**
  * @author Edward P. Legaspi | czetsuya@gmail.com
+ * 
+ * @since 0.0.1
  * @version 0.0.1
  */
-@FeignClient(value = "catalog")
-public interface CatalogServiceProxy {
+@Service
+public class CatalogServiceFallback implements CatalogServiceProxy {
 
-    @GetMapping(path = "/catalog/categories")
-    CollectionModel<EntityModel<CategoryDto>> findAllCategories(@RequestParam(required = false) Integer size, @RequestParam(required = false) Integer page);
+    @Override
+    public CollectionModel<EntityModel<CategoryDto>> findAllCategories(Integer size, Integer page) {
+        return new CollectionModel<>(Collections.emptyList());
+    }
 
-    @GetMapping(path = "/catalog/products/{uid}")
-    EntityModel<ProductDto> findByProductId(@PathVariable @NotNull UUID uid) throws NotSupportedException;
+    @Override
+    public EntityModel<ProductDto> findByProductId(@NotNull UUID uid) throws NotSupportedException {
+        return null;
+    }
 
 }
