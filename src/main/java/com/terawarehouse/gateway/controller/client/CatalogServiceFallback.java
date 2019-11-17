@@ -30,6 +30,9 @@ import org.springframework.stereotype.Service;
 import com.terawarehouse.business.domain.catalog.CategoryDto;
 import com.terawarehouse.business.domain.catalog.ProductDto;
 
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author Edward P. Legaspi | czetsuya@gmail.com
  * 
@@ -37,10 +40,23 @@ import com.terawarehouse.business.domain.catalog.ProductDto;
  * @version 0.0.1
  */
 @Service
+@Slf4j
+@NoArgsConstructor
 public class CatalogServiceFallback implements CatalogServiceProxy {
+
+    private Throwable cause;
+
+    public CatalogServiceFallback(Throwable cause) {
+        this.cause = cause;
+    }
 
     @Override
     public CollectionModel<EntityModel<CategoryDto>> findAllCategories(Integer size, Integer page) {
+
+        if (cause != null) {
+            log.error(cause.getMessage());
+        }
+
         return new CollectionModel<>(Collections.emptyList());
     }
 

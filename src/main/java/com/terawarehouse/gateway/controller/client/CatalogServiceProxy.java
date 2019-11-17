@@ -36,7 +36,7 @@ import com.terawarehouse.business.domain.catalog.ProductDto;
  * @author Edward P. Legaspi | czetsuya@gmail.com
  * @version 0.0.1
  */
-@FeignClient(value = "catalog")
+@FeignClient(value = "catalog", fallbackFactory = CatalogServiceFallbackFactory.class)
 public interface CatalogServiceProxy {
 
     @GetMapping(path = "/catalog/categories")
