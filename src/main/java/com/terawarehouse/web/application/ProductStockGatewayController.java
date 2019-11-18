@@ -36,11 +36,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.terawarehouse.business.api.controller.client.CatalogServiceProxy;
+import com.terawarehouse.business.api.controller.client.InventoryServiceProxy;
 import com.terawarehouse.business.domain.catalog.CategoryDto;
 import com.terawarehouse.business.domain.catalog.ProductDto;
 import com.terawarehouse.business.domain.inventory.ProductStockDto;
-import com.terawarehouse.gateway.controller.client.CatalogServiceProxy;
-import com.terawarehouse.gateway.controller.client.InventoryServiceProxy;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,6 +66,8 @@ public class ProductStockGatewayController {
     public List<EntityModel<ProductStockDto>> findProductStocks(@PathVariable @NotNull UUID productId, @RequestParam(required = false) Integer size,
             @RequestParam(required = false) Integer page) throws NotSupportedException {
 
+        log.debug("GET /stocks {}", productId);
+        
         ProductDto productDto = catalogServiceProxy.findByProductId(productId).getContent();
         log.debug("product={}", productDto);
 
@@ -79,6 +81,9 @@ public class ProductStockGatewayController {
 
     @GetMapping(path = "/productCategories")
     public CollectionModel<EntityModel<CategoryDto>> findAllCategories(@RequestParam(required = false) Integer size, @RequestParam(required = false) Integer page) {
+        
+        log.debug("GET /productCategories");
+        
         return catalogServiceProxy.findAllCategories(size, page);
     }
 
