@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.terawarehouse.gateway.controller.client;
+package com.terawarehouse.business.api.controller.client;
 
 import java.util.UUID;
 
