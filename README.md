@@ -12,6 +12,15 @@ Is a microservice that is a part of the Catalog and Sellout Management System.
  - It is using Hystrix to isolate points of access to remote systems, services, and 3rd-party libraries in a distributed environment.
  - It is powered by and use Spring Cloud to fetch the configuration from a remote server and join a client server registration.
  
+## Dockerized
+
+```
+docker build -t czetsuya/terawarehouse-business-api .
+docker run -d -p 8080:8080 czetsuya/terawarehouse-business-api
+```
+
+Business API should be accessible at http://localhost:8080
+ 
 ## Repositories
 
  - https://github.com/terawarehouse
